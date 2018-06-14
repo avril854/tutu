@@ -1,0 +1,267 @@
+1、win+r====cmd
+
+
+_header.php
+    1、连接数据库 mysqli_connect(host,user,root,数据库名字)
+    2、sql 
+        查找：select *  from  user
+        增加：insert  into  user  values() 
+        更新：update user set 
+        删除：delete from  user  where  id=1
+    3、执行sql  mysqli_query($数据库连接的名字，$sql)
+    4、获取返回值(把数组转换成二维数组*)
+    5、遍历数据  li
+
+index.php
+    引入 config.php 和 _header.php
+
+getMorePost.php
+    1、sql:获取id的数量 (categoryId)
+    2、执行sql  获取对应的id数量  ======$pageCount
+    3、$pageCount添加至数组response
+    4、返回值
+
+list.php
+    1/计算总页数
+    2、判断当前页是不是最后一页
+        如果是就隐藏按钮
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+index.php
+    1.header=====public/header.php
+    2.aside=====public/aside.php
+
+    3.include   public/header.php
+    4.include   public/aside.php
+
+    5.include 设置配置文件【config.php】 (主机名，用户名，密码，数据库的名字)    定义常量
+
+header.php
+    1、连接数据库
+    $conn=mysqli_connect(主机名，用户名，密码，数据库的名字);
+    2、sql
+    $sql="select *  from  categories where id!=1"
+    3、执行sql
+    $res=mysqli_query($conn,$sql);
+    4、转变成二维数组
+    $arr=[];
+    while($row=mysqli_fetch_assoc($res)){
+        $arr[]=$row
+    }
+
+    5、循环遍历li
+     <ul class="nav">
+     <?php foreach($arr as $key=>$value) : ?>
+        <li><a href="javascript:;"><i class="fa fa-glass"></i>$value["name"]</a></li>
+    <?php endforeach; ?>
+      </ul>
+
+多表查询  最新发布
+1、链接数据库
+2、sql
+3、执行sql
+4、结果集转换成二维数组
+5、foreach 
+<?php foreach($arr as $key=>$value) : ?>
+<div class="entry">
+          <div class="head">
+            <span class="sort">会生活</span>
+            <a href="javascript:;">星球大战：原力觉醒视频演示 电影票68</a>
+          </div>
+          <div class="main">
+            <p class="info">admin 发表于 2015-06-29</p>
+            <p class="brief">星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯</p>
+            <p class="extra">
+              <span class="reading">阅读(3406)</span>
+              <span class="comment">评论(0)</span>
+              <a href="javascript:;" class="like">
+                <i class="fa fa-thumbs-up"></i>
+                <span>赞(167)</span>
+              </a>
+              <a href="javascript:;" class="tags">
+                分类：<span>星球大战</span>
+              </a>
+            </p>
+            <a href="javascript:;" class="thumb">
+              <img src="static/uploads/hots_2.jpg" alt="">
+            </a>
+          </div>
+        </div>
+<?php endforeach; ?>
+
+
+
+list
+1、index.php
+    _header.php  添加a标签跳转地址   categoryId?<?php  echo  $value["id"]
+2、list.php?categoryId=?
+    a.获取传过来的值  $_GET["categoryId"]
+    1、链接数据库
+    2、sql
+
+上一次：
+        SELECT  p.title,p.feature,p.created,p.content,p.views,p.likes,c.`name`,u.`nickname`,
+        (SELECT  COUNT(id) FROM  comments WHERE post_id=p.id) AS commentsCount    
+        FROM  posts p
+        LEFT JOIN categories c ON c.`id`=p.`category_id`
+        LEFT JOIN users u ON u.id=p.`user_id`
+        WHERE p.`category_id`!=1
+        ORDER BY p.`created` DESC
+        LIMIT 5
+当前：
+        select p.title,p.feature,p.created,p.content,p.views,p.likes,c.`name`,u.`nickname`,
+        (select count(id) from comments where comments.post_id=p.`id`) as  commentCount
+        from posts p
+        left join  categories c on  c.`id`=p.`category_id`
+        left join  users u on  u.`id`=p.`user_id`
+        where p.`category_id`={$categoryId}
+        limit 10
+    3、执行sql
+    4、结果集转换成二维数组
+    5、foreach 
+<?php foreach($arr as $key=>$value) : ?>
+<div class="entry">
+          <div class="head">
+            <a href="javascript:;">星球大战：原力觉醒视频演示 电影票68</a>
+          </div>
+          <div class="main">
+            <p class="info">admin 发表于 2015-06-29</p>
+            <p class="brief">星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯</p>
+            <p class="extra">
+              <span class="reading">阅读(3406)</span>
+              <span class="comment">评论(0)</span>
+              <a href="javascript:;" class="like">
+                <i class="fa fa-thumbs-up"></i>
+                <span>赞(167)</span>
+              </a>
+              <a href="javascript:;" class="tags">
+                分类：<span>星球大战</span>
+              </a>
+            </p>
+            <a href="javascript:;" class="thumb">
+              <img src="uploads/hots_2.jpg" alt="">
+            </a>
+          </div>
+        </div>
+<?php endforeach; ?>
+
+
+
+
+daya02
+
+1/点击更多
+    1、获取前端发给我们的数据
+        a.categoryId
+        b.当前页
+        c.获取当前页面显示的条数
+    2、链接数据库
+    3、sql   
+        offset=（当前页-1）*每一页条数 ，每一页显示的条数
+    4、执行sql
+    5、返回数据给前端
+        1、定义数组arr
+        2、判断是否获取数据集
+                arr[]
+        3、返回数据
+            echo  json_encode(arr)
+
+
+
+            $.ajax({
+                type:"POST",
+                url:"",
+                data:{
+                    categoryId:categoryId,
+                    currentPage=currentPage,
+                    pageSize:pageSize
+                },
+                success:function(res){
+
+                }
+            })
+
+
+            new URLSearchParams(location.search).get("categoryId")
+
+
+
+
+    发送ajax
+
+        1、获取categoryId
+        2、设置默认是第一页+点击就自增currentPage++
+        3、每一页显示的条数pageSize=10
+
+
+
+分页：
+  php方法：  点击左边分类初次进入：
+                1、获取数据  categoryId
+                2、获取内容数据  (连接数据库库+sql+执行)====二维数组
+                3、foreach (遍历模板)
+
+  js+php方法：  点击加载更多
+        php：   
+                1、获取数据  categoryId+当前页+每页数据条数  $_POST[]
+                2、获取内容数据   
+                    (
+                    a.连接数据库库+
+                    b.sql  (limit  (当前页-1)*每页数据条数currentPage,每页数据条数pageSize)
+                    c.执行sql)
+                3、返回数据给前台  echo json_encode(respnse)
+        js：
+                1、获取数据：categoryId+当前页(自增)+每页数据条数10
+                2、ajax:{
+                    data:{categoryId+当前页(自增)+每页数据条数10},
+                    success:function(res){
+                        a.成功后遍历模板
+                        b.添加数据质结构中
+                    }
+                }
+        判断是否是最后一页
+            php:
+                1、查询id的个数  where==posts.id=categoryId
+                2、把总共条数添加至response数组中
+            js: 
+                1、获取总条数
+                2、计算总页数= Math.ceil(总条数/每页数据条数10)
+                3、如果当前页==总页数
+                    隐藏添加更多按钮
+
+
+list 详情
+    php  :
+    1、获取数据  $_GET["postId"]
+    2、连接数据库
+    3、sql
+        where  p.id=postId
+    4、执行sql  
+    5、渲染数据至结构中
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
